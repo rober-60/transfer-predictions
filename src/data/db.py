@@ -1,0 +1,35 @@
+from datetime import date
+from sqlalchemy import String, Integer, Date, ForeignKey, create_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, Session
+
+class Base(DeclarativeBase):
+    pass
+
+class Player(Base):
+    __tablename__ = "players"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    transfermarkt_id: Mapped[str] = mapped_column(String, unique=True)
+    # TODO: dopisz resztę kolumn z ustalonej listy (name, position, nationality, height, foot)
+    name: Mapped[str] = mapped_column(String)
+    nationality: Mapped[str] = mapped_column(String)
+    position: Mapped[str] = mapped_column(String)
+    height: Mapped[int] = mapped_column(Integer)
+    foot: Mapped[str] = mapped_column(String)
+
+    market_values: Mapped[list["MarketValueSnapshot"]] = relationship(back_populates="player")
+
+
+class MarketValueSnapshot(Base):
+    __tablename__ = "market_value_snapshots"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    player_id: Mapped[int] = mapped_column(ForeignKey("players.id"))
+    # TODO: dopisz date, market_value, age, club_name
+    date: Mapped[date] = mapped_column(Date)
+    market_value: Mapped[int] = mapped_column(Integer)
+    age:Mapped[int] = mapped_column(Integer)
+    club_name:Mapped[str] = mapped_column(String)
+
+    player: Mapped["Player"] = relationship(back_populates="market_values")
+
