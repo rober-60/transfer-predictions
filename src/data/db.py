@@ -1,6 +1,9 @@
 from datetime import date
 from sqlalchemy import String, Integer, Date, ForeignKey, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, Session
+from sqlalchemy import create_engine
+from typing import Generator
+from sqlalchemy.orm import sessionmaker, Session
 
 class Base(DeclarativeBase):
     pass
@@ -33,3 +36,13 @@ class MarketValueSnapshot(Base):
 
     player: Mapped["Player"] = relationship(back_populates="market_values")
 
+def get_engine():
+    return create_engine("sqlite:///data/football_values.db")
+
+def init_db():
+    Base.metadata.create_all(get_engine())
+
+def get_session():
+    session = sessionmaker(autocommit=False, autoflush=False, bind=get_engine())
+    db = session()
+    return db
