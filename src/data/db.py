@@ -13,7 +13,6 @@ class Player(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     transfermarkt_id: Mapped[str] = mapped_column(String, unique=True)
-    # TODO: dopisz resztę kolumn z ustalonej listy (name, position, nationality, height, foot)
     name: Mapped[str] = mapped_column(String)
     nationality: Mapped[str] = mapped_column(String)
     position: Mapped[str] = mapped_column(String)
@@ -28,7 +27,6 @@ class MarketValueSnapshot(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     player_id: Mapped[int] = mapped_column(ForeignKey("players.id"))
-    # TODO: dopisz date, market_value, age, club_name
     date: Mapped[date] = mapped_column(Date)
     market_value: Mapped[int] = mapped_column(Integer)
     age:Mapped[int] = mapped_column(Integer)

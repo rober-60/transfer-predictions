@@ -17,3 +17,7 @@ class TransfermarktClient:
 
         all_vals = data.get("marketValueHistory")
         return all_vals
+    
+    def get_club_players(self, club_id):
+        data = self._get(f"/clubs/{club_id}/players")
+        return data.get("players")
