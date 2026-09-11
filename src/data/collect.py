@@ -29,9 +29,12 @@ def sync_market_value_history(session, client, player):
         if str2date(entry["date"]) in dates:
             continue
         else:
+            print(entry)
+            if entry.get("marketValue") == None:
+                continue
             session.add(MarketValueSnapshot(player_id=player.id,
                                             date=str2date(entry["date"]),
-                                            market_value=entry["marketValue"],
+                                            market_value=entry.get("marketValue"),
                                             age=entry["age"],
                                             club_name=entry["clubName"]))
     return session
@@ -50,5 +53,13 @@ def collect_club_players(club_id):
 
     session.close()
 
+def collect_clubs(competition_id):
+    client = TransfermarktClient()
+    competition = client.get_clubs_from_competitions(competition_id)
+
+    for club in competition:
+        print(f'Club - {club["name"]} is processing.')
+        collect_club_players(club["id"])
+
 if __name__ == "__main__":
-    collect_club_players("131")
+    collect_clubs("GB1")

@@ -1,9 +1,6 @@
 from datetime import date
 from sqlalchemy import String, Integer, Date, ForeignKey, create_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, Session
-from sqlalchemy import create_engine
-from typing import Generator
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, sessionmaker
 
 class Base(DeclarativeBase):
     pass

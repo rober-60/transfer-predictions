@@ -21,3 +21,7 @@ class TransfermarktClient:
     def get_club_players(self, club_id):
         data = self._get(f"/clubs/{club_id}/players")
         return data.get("players")
+
+    def get_clubs_from_competitions(self, competition_id):
+        data = self._get(f"/competitions/{competition_id}/clubs")
+        return data.get("clubs")
