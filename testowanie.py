@@ -1,8 +1,8 @@
-from src.data.transfermarkt_client import TransfermarktClient
-from datetime import datetime
-import requests
+# from src.data.transfermarkt_client import TransfermarktClient
+# from datetime import datetime
+# import requests
 
-test = TransfermarktClient()
+# test = TransfermarktClient()
 
 # print(test.get_player_profile("937958")["name"])
 # print(test.get_market_value_history("937958")[0])
@@ -24,4 +24,15 @@ test = TransfermarktClient()
 # session = get_session()
 # print("Baza utworzona, sesja działa:", session)
 
-print(test.get_club_players("131"))
+# print(test.get_club_players("131"))
+
+from src.data.db import get_engine
+from src.features.build_dataset import load_snapshots, build_examples
+
+df = load_snapshots()
+examples = build_examples(df)
+
+print(len(examples))
+print(examples.head(20))
+print(examples["label"].value_counts())
+examples.to_csv("data/training_examples.csv", index=False)
