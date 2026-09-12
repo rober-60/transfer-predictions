@@ -1,5 +1,6 @@
 import pandas as pd
 from src.data.db import get_engine
+import numpy as np
 
 def load_snapshots() -> pd.DataFrame:
     engine = get_engine()
@@ -52,6 +53,14 @@ def build_examples(df: pd.DataFrame, horizon_days: int = 180, stability_threshol
             else:
                 label = "stable"
 
-            rows.append({"days_since_last_snapshot":days_since_last_snapshot, "date": row_t["date"], "player_id":player_id, "age":age, "value_change_180d":value_change_180d, "label": label, "club_change":club_change, "num_snapshots_before_t":num_snapshots_before_t})
+            recent = past.tail(4)
+            if len(recent) >= 2:
+                x = (recent["date"] - recent["date"].min()).dt.days
+                y = recent["market_value"]
+                slope = np.polyfit(x, y, 1)[0]
+            else:
+                slope = None
+
+            rows.append({"days_since_last_snapshot":days_since_last_snapshot, "date": row_t["date"], "player_id":player_id, "age":age, "value_change_180d":value_change_180d, "slope": slope, "label": label, "club_change":club_change, "num_snapshots_before_t":num_snapshots_before_t})
 
     return pd.DataFrame(rows)

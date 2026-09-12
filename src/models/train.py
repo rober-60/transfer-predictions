@@ -28,13 +28,8 @@ def train_model(file):
     train = df[df["date"] < point]
     test = df[df["date"] >= point]
 
-    feature_cols = ["days_since_last_snapshot", "age", "value_change_180d", "club_change", "num_snapshots_before_t"]
+    feature_cols = ["days_since_last_snapshot", "age", "value_change_180d", "slope", "club_change", "num_snapshots_before_t"]
 
-    # TODO 1: wydziel X_train, y_train, X_test, y_test z train/test, używając feature_cols i "label"
-    # TODO 2: club_change to bool/None - XGBoost woli liczby; zamień na float (True->1, False->0, None zostaje NaN)
-    # TODO 3: stwórz model = XGBClassifier(...), wytrenuj przez model.fit(X_train, y_train)
-    # TODO 4: zrób predykcje: y_pred = model.predict(X_test)
-    # TODO 5: wypisz accuracy_score(y_test, y_pred) i classification_report(y_test, y_pred)
     label_map = {"loss": 0, "stable": 1, "increase": 2}
 
     X_train = train[feature_cols].copy()
@@ -48,6 +43,9 @@ def train_model(file):
     model = XGBClassifier()
     sample_weights = compute_sample_weight(class_weight="balanced", y=Y_train)
     model.fit(X_train, Y_train, sample_weight=sample_weights)
+
+    importances = pd.Series(model.feature_importances_, index=feature_cols).sort_values(ascending=False)
+    print(importances)
 
     y_pred = model.predict(X_test)
 
