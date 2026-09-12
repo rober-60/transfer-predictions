@@ -8,7 +8,7 @@ def load_snapshots() -> pd.DataFrame:
     df["date"] = pd.to_datetime(df["date"])
     return df
 
-def build_examples(df: pd.DataFrame, horizon_days: int = 180, stability_threshold: float = 0.10) -> pd.DataFrame:
+def build_examples(df: pd.DataFrame, horizon_days: int = 180, stability_threshold: float = 0.15) -> pd.DataFrame:
     """Dla każdego zawodnika, dla każdego snapshotu t, zbuduj wiersz cech + etykietę."""
     rows = []
 
