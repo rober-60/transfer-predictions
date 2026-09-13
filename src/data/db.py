@@ -1,6 +1,7 @@
 from datetime import date
-from sqlalchemy import String, Integer, Date, ForeignKey, create_engine
+from sqlalchemy import String, Integer, Float, Date, ForeignKey, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, sessionmaker
+from sqlalchemy import UniqueConstraint
 
 class Base(DeclarativeBase):
     pass
@@ -10,6 +11,7 @@ class Player(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     transfermarkt_id: Mapped[str] = mapped_column(String, unique=True)
+    api_football_id: Mapped[str | None] = mapped_column(String, unique=True, nullable=True)
     name: Mapped[str] = mapped_column(String)
     nationality: Mapped[str] = mapped_column(String)
     position: Mapped[str] = mapped_column(String)
@@ -17,6 +19,7 @@ class Player(Base):
     foot: Mapped[str] = mapped_column(String)
 
     market_values: Mapped[list["MarketValueSnapshot"]] = relationship(back_populates="player")
+    player_stats: Mapped[list["PlayerStats"]] = relationship(back_populates="player")
 
 
 class MarketValueSnapshot(Base):
@@ -30,6 +33,21 @@ class MarketValueSnapshot(Base):
     club_name:Mapped[str] = mapped_column(String)
 
     player: Mapped["Player"] = relationship(back_populates="market_values")
+
+class PlayerStats(Base):
+    __tablename__ = "player_stats"
+    __table_args__ = (UniqueConstraint("player_id", "season", name="uq_player_season"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    player_id: Mapped[int] = mapped_column(ForeignKey("players.id"))
+    appearences: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    minutes: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    total_goals: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    assists: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    rating: Mapped[float | None] = mapped_column(Float, nullable=True)
+    season: Mapped[int] = mapped_column(Integer)
+
+    player: Mapped["Player"] = relationship(back_populates="player_stats")
 
 def get_engine():
     return create_engine("sqlite:///data/football_values.db")
