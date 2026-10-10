@@ -43,7 +43,6 @@ Model niewiele przebija baseline. Ważność cech jest rozłożona dość równo
 
 ## Co próbowałem
 
-- **Interpolacja Czebyszewa** jako metoda prognozy: odrzucona. Wielomiany świetnie interpolują wewnątrz przedziału, ale ekstrapolacja w przyszłość jest niestabilna, a historia wartości jest zaszumiona i nieregularna.
 - **Wagi klas** (`sample_weight`): lepszy recall dla klas rzadszych, ale niższa accuracy.
 - **Różne progi stabilności** (5%, 10%, 15%, 20%): macro F1 zmienia się tylko z 0.44 do 0.46. Próg nie jest wąskim gardłem.
 - **Nachylenie trendu** (regresja liniowa z 4 ostatnich punktów): drobna poprawa, macro F1 z 0.46 do 0.47.
