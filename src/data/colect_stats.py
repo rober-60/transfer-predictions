@@ -23,6 +23,7 @@ def collect_stats_for_club(transfermarkt_club_id: str, session, client, requests
     db_players = (session.query(Player).join(MarketValueSnapshot).filter(MarketValueSnapshot.club_name == club_name).distinct().all())
 
     for player in db_players:
+
         if requests_used >= MAX_REQUESTS_PER_DAY:
             print("Limit dzienny osiągnięty, przerywam")
             return requests_used
@@ -35,10 +36,24 @@ def collect_stats_for_club(transfermarkt_club_id: str, session, client, requests
         player.api_football_id = str(match["id"])
         session.flush()
 
+        already_saved = (
+                    session.query(PlayerStats)
+                    .filter_by(player_id=player.id, season=SEASON)
+                    .first()
+                )
+        if already_saved:
+            print(f"{player.name}: statystyki już zapisane, pomijam")
+            continue
+        
         stats_response = client.get_player_season_stats(match["id"], season=SEASON)
         requests_used+=1
 
+        time.sleep(7)
+
         league_stats = None
+        if not stats_response["response"]:
+            print(f"{player.name}: pusta odpowiedź API")
+            continue
         for stat_entry in stats_response["response"][0]["statistics"]:
             if stat_entry["league"]["name"] == "Premier League":
                 league_stats = stat_entry
@@ -61,7 +76,6 @@ def collect_stats_for_club(transfermarkt_club_id: str, session, client, requests
         session.commit()
         print(f"{player.name}: zapisano statystyki")
 
-        time.sleep(1)
 
     return requests_used
 

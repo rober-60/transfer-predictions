@@ -6,3 +6,5 @@ CLUB_ID_MAPPING = {
     "11": {"api_id": 42, "name": "Arsenal"},
     "31": {"api_id": 40, "name": "Liverpool"}
 }
+
+# CLUB_ID_MAPPING = {"281": {"api_id": 50, "name": "Manchester City"}}
