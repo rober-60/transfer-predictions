@@ -2,11 +2,11 @@
 
 Projekt uczący się przewidywać, czy wartość rynkowa piłkarza **wzrośnie, spadnie czy zostanie mniej więcej taka sama** w ciągu najbliższych 180 dni. Robiony samodzielnie jako projekt do portfolio, w trakcie rozwijania.
 
-## Co to robi
+## Działanie
 
 1. Pobiera z Transfermarkt (przez lokalnie uruchomione `transfermarkt-api`) składy klubów Premier League, profile zawodników i historię ich wartości rynkowej.
 2. Zapisuje dane do SQLite (SQLAlchemy).
-3. Z historii wartości buduje przykłady treningowe: cechy liczone z danych **sprzed** punktu `t`, etykieta z tego, co stało się 180 dni **po** `t`.
+3. Z historii wartości buduje przykłady treningowe: cechy liczone z danych sprzed punktu `t`, etykieta z tego, co stało się 180 dni po `t`.
 4. Trenuje klasyfikator XGBoost z podziałem czasowym (nie losowym) na train/test.
 5. Dociąga statystyki formy (gole, asysty, minuty, rating) z API-Football i dopasowuje zawodników między źródłami.
 
